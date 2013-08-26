@@ -254,4 +254,14 @@ public class PropertyUtil {
 		}
 		return null;
 	}
+	
+	public static boolean isPrimitive(Class<?> type) {
+		return type.equals(int.class) || type.equals(long.class) || type.equals(char.class) || type.equals(byte.class) || type.equals(boolean.class) || 
+				type.equals(short.class) || type.equals(double.class) || type.equals(float.class);
+	}
+	
+	public static boolean isPrimitive(PropertyDescriptor descriptor) {
+		return isPrimitive(descriptor.getPropertyType());
+		
+	}
 }

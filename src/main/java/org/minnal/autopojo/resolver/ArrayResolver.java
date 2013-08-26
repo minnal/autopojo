@@ -39,7 +39,6 @@ public class ArrayResolver extends AbstractAttributeResolver {
 	public Object[] resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Class<?> elementType = ((Class<?>) clazz).getComponentType();
 		Object array = Array.newInstance(elementType, noOfElements);
-		maxDepth -= 1;
 		for (int i = 0; i < noOfElements; i++) {
             Array.set(array, i, strategy.resolve(elementType, maxDepth));
 		}

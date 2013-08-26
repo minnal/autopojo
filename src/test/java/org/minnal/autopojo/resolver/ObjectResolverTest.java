@@ -3,6 +3,7 @@
  */
 package org.minnal.autopojo.resolver;
 
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -19,6 +20,7 @@ import org.minnal.autopojo.NestedObjectThroughCollection;
 import org.minnal.autopojo.ObjectWithExcludeFields;
 import org.minnal.autopojo.OneLevelNestedObject;
 import org.minnal.autopojo.SimpleObject;
+import org.minnal.autopojo.MultiLevelNestedObject;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -90,6 +92,33 @@ public class ObjectResolverTest {
 	@Test
 	public void shouldResolveGenericObject() {
 		resolver.resolve(GenericObject.class, 0, String.class, Long.class);
+	}
+	
+	@Test
+	public void shouldResolveObjectTillLevel1() {
+		MultiLevelNestedObject object = (MultiLevelNestedObject) resolver.resolve(MultiLevelNestedObject.class, 1);
+		assertNotNull(object.getNestedObject1());
+		assertNotNull(object.getNestedObject2());
+		assertNotNull(object.getSimpleObject());
+		assertNull(object.getSimpleObject().getWrapperBoolean());
+		assertFalse(object.getSimpleObject().isPrimitiveBoolean());
+		assertNull(object.getNestedObject1().getFirstObject());
+		assertNull(object.getNestedObject1().getSecondObject());
+	}
+	
+	@Test
+	public void shouldResolveObjectWithCollectionsTillLevel2() {
+		MultiLevelNestedObject object = (MultiLevelNestedObject) resolver.resolve(MultiLevelNestedObject.class, 3);
+		assertNotNull(object.getNestedObject1());
+		assertNotNull(object.getNestedObjectThroughCollection());
+		assertNotNull(object.getSimpleObject());
+		assertNotNull(object.getSimpleObject().getWrapperBoolean());
+		assertTrue(object.getSimpleObject().isPrimitiveBoolean());
+		assertNotNull(object.getNestedObject1().getFirstObject());
+		assertNotNull(object.getNestedObject1().getSecondObject());
+		assertNotNull(object.getNestedObjectThroughCollection().getNestedObjectList());
+		assertNotNull(object.getNestedObjectThroughCollection().getNestedObjectList().get(0).getFirstObject());
+		assertNull(object.getNestedObjectThroughCollection().getNestedObjectList().get(0).getFirstObject().getWrapperBoolean());
 	}
 	
 	private void verifyOneLevelNestedObject(OneLevelNestedObject object) {

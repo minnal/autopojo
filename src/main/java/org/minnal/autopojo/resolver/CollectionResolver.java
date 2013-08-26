@@ -60,7 +60,6 @@ public class CollectionResolver extends AbstractAttributeResolver {
 			value = new LinkedList();
 		}
 		
-		maxDepth -= 1;
 		for (int i = 0; i < noOfElements; i++) {
 			value.add(strategy.resolve(elementType, maxDepth, genericParameters));
 		}

@@ -48,7 +48,6 @@ public class MapResolver extends AbstractAttributeResolver {
 		Type[] valueParameters = PropertyUtil.getTypeArguments(genericValueType);
 		
 		Map map = new HashMap();
-		maxDepth -= 1;
 		for (int i = 0; i < noOfElements; i++) {
 			map.put(strategy.resolve(keyType, maxDepth, keyParameters), strategy.resolve(valueType, maxDepth, valueParameters));
 		}
