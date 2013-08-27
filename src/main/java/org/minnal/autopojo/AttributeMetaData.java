@@ -85,4 +85,13 @@ public class AttributeMetaData {
 	public Type[] getTypeArguments() {
 		return typeArguments.toArray(new Type[0]);
 	}
+	
+	public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+		for (Annotation annotation : annotations) {
+			if (annotation.getClass().equals(annotationClass)) {
+				return (T) annotation;
+			}
+		}
+		return null;
+	}
 }

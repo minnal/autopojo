@@ -63,16 +63,21 @@ public class ObjectResolver extends AbstractAttributeResolver {
 		Map<TypeVariable<?>, Type> genericParameters = getGenericParameterMap(clazz, genericTypes);
 		Object pojo = constructPojo(clazz, genericParameters, maxDepth);
 		
-		for (PropertyDescriptor descriptor : PropertyUtils.getPropertyDescriptors(clazz)) {
-			if (shouldExclude(descriptor)) {
-				continue;
+		if (! PropertyUtil.isSimpleProperty(clazz)) {
+			for (PropertyDescriptor descriptor : PropertyUtils.getPropertyDescriptors(clazz)) {
+				if (shouldExclude(descriptor)) {
+					continue;
+				}
+				strategy.resolve(pojo, new AttributeMetaData(descriptor, genericParameters), maxDepth);
 			}
-			strategy.resolve(pojo, new AttributeMetaData(descriptor, genericParameters), maxDepth);
 		}
 		return pojo;
 	}
 	
 	protected boolean shouldExclude(PropertyDescriptor descriptor) {
+		if (descriptor.getWriteMethod() == null) {
+			return true;
+		}
 		for (Class<? extends Annotation> annotation : excludeAnnotations) {
 			if (PropertyUtil.hasAnnotation(descriptor, annotation)) {
 				return true;
@@ -120,10 +125,13 @@ public class ObjectResolver extends AbstractAttributeResolver {
 		Object[] parameters = new Object[parameterTypes.length];
 		for (int i = 0; i < parameterTypes.length; i++) {
 			if (parameterTypes[i] instanceof TypeVariable) {
-				
+				parameters[i] = strategy.resolve(PropertyUtil.getRawType(genericParameters.get(parameterTypes[i])), maxDepth, 
+						PropertyUtil.getTypeArguments(genericParameters.get(parameterTypes[i])));
 			} else if (parameterTypes[i] instanceof ParameterizedType) {
 				Type[] arguments = ((ParameterizedType) parameterTypes[i]).getActualTypeArguments();
 				parameters[i] = strategy.resolve(PropertyUtil.getRawType(parameterTypes[i]), maxDepth, getGenericTypes(arguments, genericParameters));
+			} else {
+				parameters[i] = strategy.resolve(PropertyUtil.getRawType(parameterTypes[i]), maxDepth, PropertyUtil.getTypeArguments(parameterTypes[i]));
 			}
 		}
 		try {

@@ -17,6 +17,7 @@ import org.minnal.autopojo.resolver.ByteResolver;
 import org.minnal.autopojo.resolver.CharacterResolver;
 import org.minnal.autopojo.resolver.CollectionResolver;
 import org.minnal.autopojo.resolver.DoubleResolver;
+import org.minnal.autopojo.resolver.EnumResolver;
 import org.minnal.autopojo.resolver.FloatResolver;
 import org.minnal.autopojo.resolver.IntegerResolver;
 import org.minnal.autopojo.resolver.LongResolver;
@@ -92,6 +93,10 @@ public class GenerationStrategy {
 		return new ObjectResolver(this);
 	}
 	
+	protected EnumResolver getEnumResolver() {
+		return new EnumResolver();
+	}
+	
 	protected AttributeResolver resolverFor(Class<?> type) {
 		AttributeResolver resolver = null;
 		if (PropertyUtil.isCollectionProperty(type, false)) {
@@ -124,6 +129,8 @@ public class GenerationStrategy {
 			resolver = getCharacterResolver();
 		} else if (CharSequence.class.isAssignableFrom(type)) {
 			resolver = getStringResolver();
+		} else if (type.isEnum()) {
+			resolver = getEnumResolver();
 		} else {
 			resolver = getObjectResolver();
 		}

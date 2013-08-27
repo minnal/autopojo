@@ -17,10 +17,10 @@ public abstract class AbstractAttributeResolver implements AttributeResolver {
 
 	protected void setAttribute(Object pojo, AttributeMetaData attribute, Object value) {
 		try {
-			if (PropertyUtil.isPrimitive(attribute.getType()) && value == null) {
-				PropertyUtils.setProperty(pojo, attribute.getName(), ConvertUtils.convert(0, attribute.getType()));
-			} else {
+			if (value != null) {
 				PropertyUtils.setProperty(pojo, attribute.getName(), value);
+			} else if (PropertyUtil.isPrimitive(attribute.getType())) {
+				PropertyUtils.setProperty(pojo, attribute.getName(), ConvertUtils.convert(0, attribute.getType()));
 			}
 		} catch (Exception e) {
 			throw new AutoPojoException(e);
