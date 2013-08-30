@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.minnal</groupId>
 	<artifactId>autopojo</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Auto Pojo</name>
 	<description>Automatically populate pojo</description>
 	<dependencies>
@@ -67,7 +67,6 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/minnal/autopojo.git</developerConnection>
-		<tag>autopojo-0.0.2</tag>
 	</scm>
 
 	<developers>
@@ -154,7 +153,7 @@
 					<merge>true</merge>
 				</configuration>
 				<executions>
-					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+					<!-- run site-maven-plugin's 'site' target as part of the build's normal
 						'deploy' phase -->
 					<execution>
 						<goals>
