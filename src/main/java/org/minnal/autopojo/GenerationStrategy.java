@@ -6,8 +6,11 @@ package org.minnal.autopojo;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.minnal.autopojo.resolver.ArrayResolver;
 import org.minnal.autopojo.resolver.AttributeResolver;
 import org.minnal.autopojo.resolver.BigDecimalResolver;
@@ -25,114 +28,79 @@ import org.minnal.autopojo.resolver.MapResolver;
 import org.minnal.autopojo.resolver.ObjectResolver;
 import org.minnal.autopojo.resolver.ShortResolver;
 import org.minnal.autopojo.resolver.StringResolver;
-import org.minnal.autopojo.util.PropertyUtil;
 
 /**
  * @author ganeshs
  *
  */
 public class GenerationStrategy {
-
-	protected AttributeResolver getStringResolver() {
-		return new StringResolver();
+	
+	private Map<Class<?>, AttributeResolver> resolvers = new HashMap<Class<?>, AttributeResolver>();
+	
+	private Configuration configuration;
+	
+	public GenerationStrategy(Configuration configuration) {
+		this.configuration = configuration;
+		register(String.class, StringResolver.class);
+		register(Object.class, ObjectResolver.class);
+		register(Integer.class, IntegerResolver.class);
+		register(int.class, IntegerResolver.class);
+		register(Long.class, LongResolver.class);
+		register(long.class, LongResolver.class);
+		register(Boolean.class, BooleanResolver.class);
+		register(boolean.class, BooleanResolver.class);
+		register(Double.class, DoubleResolver.class);
+		register(double.class, DoubleResolver.class);
+		register(Float.class, FloatResolver.class);
+		register(float.class, FloatResolver.class);
+		register(Short.class, ShortResolver.class);
+		register(short.class, ShortResolver.class);
+		register(Byte.class, ByteResolver.class);
+		register(byte.class, ByteResolver.class);
+		register(Character.class, CharacterResolver.class);
+		register(char.class, CharacterResolver.class);
+		register(BigInteger.class, BigIntegerResolver.class);
+		register(BigDecimal.class, BigDecimalResolver.class);
+		register(Collection.class, CollectionResolver.class);
+		register(Map.class, MapResolver.class);
+		register(Enum.class, EnumResolver.class);
+		register(Object[].class, ArrayResolver.class);
+		register(int[].class, ArrayResolver.class);
+		register(long[].class, ArrayResolver.class);
+		register(boolean[].class, ArrayResolver.class);
+		register(double[].class, ArrayResolver.class);
+		register(float[].class, ArrayResolver.class);
+		register(byte[].class, ArrayResolver.class);
+		register(short[].class, ArrayResolver.class);
+		register(char[].class, ArrayResolver.class);
 	}
 	
-	protected AttributeResolver getBooleanResolver() {
-		return new BooleanResolver();
-	}
-	
-	protected AttributeResolver getByteResolver() {
-		return new ByteResolver();
-	}
-	
-	protected AttributeResolver getCharacterResolver() {
-		return new CharacterResolver();
-	}
-	
-	protected AttributeResolver getLongResolver() {
-		return new LongResolver();
-	}
-	
-	protected AttributeResolver getIntegerResolver() {
-		return new IntegerResolver();
-	}
-	
-	protected AttributeResolver getDoubleResolver() {
-		return new DoubleResolver();
-	}
-	
-	protected AttributeResolver getFloatResolver() {
-		return new FloatResolver();
-	}
-	
-	protected AttributeResolver getShortResolver() {
-		return new ShortResolver();
-	}
-	
-	protected AttributeResolver getBigIntegerResolver() {
-		return new BigIntegerResolver();
-	}
-	
-	protected AttributeResolver getBigDecimalResolver() {
-		return new BigDecimalResolver();
-	}
-	
-	protected AttributeResolver getCollectionResolver() {
-		return new CollectionResolver(this);
-	}
-	
-	protected AttributeResolver getMapResolver() {
-		return new MapResolver(this);
-	}
-	
-	protected AttributeResolver getArrayResolver() {
-		return new ArrayResolver(this);
-	}
-	
-	protected AttributeResolver getObjectResolver() {
-		return new ObjectResolver(this);
-	}
-	
-	protected EnumResolver getEnumResolver() {
-		return new EnumResolver();
-	}
-	
-	protected AttributeResolver resolverFor(Class<?> type) {
+	/**
+	 * Register the attribute class with the resolver
+	 * 
+	 * @param attributeClass
+	 * @param resolverClass
+	 */
+	public void register(Class<?> attributeClass, Class<? extends AttributeResolver> resolverClass) {
 		AttributeResolver resolver = null;
-		if (PropertyUtil.isCollectionProperty(type, false)) {
-			resolver = getCollectionResolver();
-		} else if (PropertyUtil.isMapProperty(type)) {
-			resolver = getMapResolver();
-		} else if (type.isArray()) {
-			resolver = getArrayResolver();
-		} else if (type.equals(String.class)) {
-			resolver = getStringResolver();
-		} else if (ClassUtils.isAssignable(type, Long.class)) {
-			resolver = getLongResolver();
-		} else if (ClassUtils.isAssignable(type, Integer.class)) {
-			resolver = getIntegerResolver();
-		} else if (ClassUtils.isAssignable(type, Short.class)) {
-			resolver = getShortResolver();
-		} else if (ClassUtils.isAssignable(type, Double.class)) {
-			resolver = getDoubleResolver();
-		} else if (ClassUtils.isAssignable(type, Float.class)) {
-			resolver = getFloatResolver();
-		} else if (ClassUtils.isAssignable(type, Byte.class)) {
-			resolver = getByteResolver();
-		} else if (type.equals(BigInteger.class)) {
-			resolver = getBigIntegerResolver();
-		} else if (type.equals(BigDecimal.class)) {
-			resolver = getBigDecimalResolver();
-		} else if (ClassUtils.isAssignable(type, Boolean.class)) {
-			resolver = getBooleanResolver();
-		} else if (ClassUtils.isAssignable(type, Character.class)) {
-			resolver = getCharacterResolver();
-		} else if (CharSequence.class.isAssignableFrom(type)) {
-			resolver = getStringResolver();
-		} else if (type.isEnum()) {
-			resolver = getEnumResolver();
-		} else {
-			resolver = getObjectResolver();
+		try {
+			resolver = resolverClass.newInstance();
+		} catch (Exception e) {
+			throw new AutoPojoException("Failed while instantiating the resolver - " + resolverClass, e);
+		}
+		resolver.init(this, configuration);
+		resolvers.put(attributeClass, resolver);
+	}
+
+	protected AttributeResolver resolverFor(Class<?> type) {
+		AttributeResolver resolver = resolvers.get(type);
+		if (resolver == null) {
+			for (Entry<Class<?>, AttributeResolver> entry : resolvers.entrySet()) {
+				if (entry.getKey().isAssignableFrom(type)) {
+					resolver = entry.getValue();
+					break;
+				}
+			}
 		}
 		return resolver;
 	}

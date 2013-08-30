@@ -13,20 +13,18 @@ import java.lang.reflect.Type;
  */
 public class IntegerResolver extends NumberResolver<Integer> {
 	
-	/**
-	 * @param minValue
-	 * @param maxValue
-	 */
-	public IntegerResolver(int minValue, int maxValue) {
-		super(minValue, maxValue);
-	}
-
-	public IntegerResolver() {
-		super(0, Integer.MAX_VALUE/2);
-	}
-
 	public Integer resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Integer value = (Integer) super.resolve(clazz, maxDepth, genericTypes);
-		return value != null ? value : minValue + (int) (Math.random() * (maxValue - minValue + 1));
+		return value != null ? value : configuration.getIntegerMinValue() + (int) (Math.random() * (configuration.getIntegerMaxValue() - configuration.getIntegerMinValue() + 1));
+	}
+	
+	@Override
+	protected Integer getMaxValue() {
+		return null;
+	}
+	
+	@Override
+	protected Integer getMinValue() {
+		return configuration.getIntegerMinValue();
 	}
 }

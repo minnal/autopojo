@@ -11,9 +11,11 @@ import java.util.Map;
 
 import org.minnal.autopojo.AttributeMetaData;
 import org.minnal.autopojo.CollectionModel;
+import org.minnal.autopojo.Configuration;
 import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.SimpleObject;
 import org.minnal.autopojo.util.PropertyUtil;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -22,7 +24,16 @@ import org.testng.annotations.Test;
  */
 public class MapResolverTest {
 	
-	private MapResolver resolver = new MapResolver(new GenerationStrategy());
+	private MapResolver resolver;
+	
+	private Configuration configuration; 
+	
+	@BeforeMethod
+	public void setup() {
+		configuration = new Configuration();
+		resolver = new MapResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
+	}
 
 	@Test
 	public void shouldGenerateNonGenericMap() {
@@ -41,12 +52,14 @@ public class MapResolverTest {
 	
 	@Test
 	public void shouldGenerateSpecifiedNoOfElements() {
-		resolver = new MapResolver(new GenerationStrategy(), 10);
+		configuration.setNoOfElementsInCollection(10);
+		resolver = new MapResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 		generateAndCheckMap("nonGenericMap", Object.class, Object.class, 10);
 	}
 	
 	private void generateAndCheckMap(String propertyName, Class<?> keyClass, Class<?> valueClass) {
-		generateAndCheckMap(propertyName, keyClass, valueClass, MapResolver.DEFAULT_NO_OF_ELEMENTS);
+		generateAndCheckMap(propertyName, keyClass, valueClass, configuration.getNoOfElementsInCollection());
 	}
 	
 	private void generateAndCheckMap(String propertyName, Class<?> keyClass, Class<?> valueClass, int count) {

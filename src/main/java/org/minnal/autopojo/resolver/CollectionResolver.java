@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.util.PropertyUtil;
-
-
 
 /**
  * @author ganeshs
@@ -23,28 +20,6 @@ import org.minnal.autopojo.util.PropertyUtil;
  */
 public class CollectionResolver extends AbstractAttributeResolver {
 	
-	private int noOfElements = DEFAULT_NO_OF_ELEMENTS;
-	
-	private GenerationStrategy strategy;
-	
-	public static final int DEFAULT_NO_OF_ELEMENTS = 3;
-	
-	/**
-	 * @param noOfElements
-	 * @param strategy
-	 */
-	public CollectionResolver(int noOfElements, GenerationStrategy strategy) {
-		this.noOfElements = noOfElements;
-		this.strategy = strategy;
-	}
-
-	/**
-	 * @param strategy
-	 */
-	public CollectionResolver(GenerationStrategy strategy) {
-		this.strategy = strategy;
-	}
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Collection resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Type genericElementType = genericTypes != null && genericTypes.length > 0 ? genericTypes[0] : Object.class;
@@ -60,7 +35,7 @@ public class CollectionResolver extends AbstractAttributeResolver {
 			value = new LinkedList();
 		}
 		
-		for (int i = 0; i < noOfElements; i++) {
+		for (int i = 0; i < configuration.getNoOfElementsInCollection(); i++) {
 			value.add(strategy.resolve(elementType, maxDepth, genericParameters));
 		}
 		return value;

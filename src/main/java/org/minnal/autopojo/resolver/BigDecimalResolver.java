@@ -12,21 +12,18 @@ import java.math.BigDecimal;
  */
 public class BigDecimalResolver extends NumberResolver<Double> {
 	
-	public BigDecimalResolver() {
-		super(0d, Double.MAX_VALUE / 2);
-	}
-
-	/**
-	 * @param minValue
-	 * @param maxValue
-	 */
-	public BigDecimalResolver(Double minValue, Double maxValue) {
-		super(minValue, maxValue);
-	}
-	
 	public BigDecimal resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Double value = (Double) super.resolve(clazz, maxDepth, genericTypes);
-		return BigDecimal.valueOf(value != null ? value : minValue + (double) (Math.random() * (maxValue - minValue)));
+		return BigDecimal.valueOf(value != null ? value : getMinValue() + (double) (Math.random() * (getMaxValue() - getMinValue())));
+	}
+
+	@Override
+	protected Double getMaxValue() {
+		return configuration.getDoubleMaxValue();
 	}
 	
+	@Override
+	protected Double getMinValue() {
+		return configuration.getDoubleMinValue();
+	}
 }

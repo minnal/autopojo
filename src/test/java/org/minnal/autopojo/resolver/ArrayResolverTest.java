@@ -10,9 +10,11 @@ import java.beans.PropertyDescriptor;
 
 import org.minnal.autopojo.AttributeMetaData;
 import org.minnal.autopojo.CollectionModel;
+import org.minnal.autopojo.Configuration;
 import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.SimpleObject;
 import org.minnal.autopojo.util.PropertyUtil;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -21,7 +23,16 @@ import org.testng.annotations.Test;
  */
 public class ArrayResolverTest {
 	
-	private ArrayResolver resolver = new ArrayResolver(new GenerationStrategy());
+	private ArrayResolver resolver;
+	
+	private Configuration configuration; 
+	
+	@BeforeMethod
+	public void setup() {
+		configuration = new Configuration();
+		resolver = new ArrayResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
+	}
 
 	@Test
 	public void shouldGenerateAnyObjectArray() {
@@ -40,12 +51,14 @@ public class ArrayResolverTest {
 	
 	@Test
 	public void shouldGenerateSpecifiedNoOfElements() {
-		resolver = new ArrayResolver(new GenerationStrategy(), 10);
+		configuration.setNoOfElementsInCollection(10);
+		resolver = new ArrayResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 		generateAndCheckArray("anyObjectArray", Object.class, 10);
 	}
 	
 	private void generateAndCheckArray(String propertyName, Class<?> elementClass) {
-		generateAndCheckArray(propertyName, elementClass, ArrayResolver.DEFAULT_NO_OF_ELEMENTS);
+		generateAndCheckArray(propertyName, elementClass, configuration.getNoOfElementsInCollection());
 	}
 	
 	private void generateAndCheckArray(String propertyName, Class<?> elementClass, int count) {

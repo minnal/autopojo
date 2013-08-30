@@ -12,21 +12,18 @@ import java.math.BigInteger;
  */
 public class BigIntegerResolver extends NumberResolver<Long> {
 	
-	public BigIntegerResolver() {
-		super(0L, Long.MAX_VALUE / 2);
-	}
-
-	/**
-	 * @param minValue
-	 * @param maxValue
-	 */
-	public BigIntegerResolver(Long minValue, Long maxValue) {
-		super(minValue, maxValue);
-	}
-	
 	public BigInteger resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Long value = (Long) super.resolve(clazz, maxDepth, genericTypes);
-		return BigInteger.valueOf(value != null ? value : minValue + (long) (Math.random() * (maxValue - minValue + 1)));
+		return BigInteger.valueOf(value != null ? value : getMinValue() + (long) (Math.random() * (getMaxValue() - getMinValue() + 1)));
+	}
+
+	@Override
+	protected Long getMaxValue() {
+		return configuration.getLongMaxValue();
 	}
 	
+	@Override
+	protected Long getMinValue() {
+		return configuration.getLongMinValue();
+	}
 }

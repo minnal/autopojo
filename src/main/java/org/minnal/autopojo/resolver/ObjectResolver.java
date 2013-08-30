@@ -9,15 +9,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.minnal.autopojo.AttributeMetaData;
-import org.minnal.autopojo.GenerationStrategy;
-import org.minnal.autopojo.annotations.Exclude;
 import org.minnal.autopojo.util.PropertyUtil;
 
 /**
@@ -26,35 +22,6 @@ import org.minnal.autopojo.util.PropertyUtil;
  */
 public class ObjectResolver extends AbstractAttributeResolver {
 	
-	private List<Class<? extends Annotation>> excludeAnnotations = new ArrayList<Class<? extends Annotation>>();
-	
-	private List<String> excludeFields = new ArrayList<String>();
-	
-	private GenerationStrategy strategy;
-	
-	/**
-	 * @param strategy
-	 */
-	public ObjectResolver(GenerationStrategy strategy) {
-		this.strategy = strategy;
-		excludeAnnotations.add(Exclude.class);
-	}
-
-	/**
-	 * @param strategy
-	 * @param excludeAnnotations
-	 * @param excludeFields
-	 */
-	public ObjectResolver(GenerationStrategy strategy, List<Class<? extends Annotation>> excludeAnnotations, List<String> excludeFields) {
-		this(strategy);
-		if (excludeAnnotations != null) {
-			this.excludeAnnotations.addAll(excludeAnnotations);
-		}
-		if (excludeFields != null) {
-			this.excludeFields.addAll(excludeFields);
-		}
-	}
-
 	public Object resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		if (clazz.equals(Object.class)) {
 			return new Object();
@@ -78,7 +45,7 @@ public class ObjectResolver extends AbstractAttributeResolver {
 		if (descriptor.getWriteMethod() == null) {
 			return true;
 		}
-		for (Class<? extends Annotation> annotation : excludeAnnotations) {
+		for (Class<? extends Annotation> annotation : configuration.getExcludeAnnotations()) {
 			if (PropertyUtil.hasAnnotation(descriptor, annotation)) {
 				return true;
 			}
@@ -86,7 +53,7 @@ public class ObjectResolver extends AbstractAttributeResolver {
 		if (descriptor.getReadMethod().getDeclaringClass().equals(Object.class)) {
 			return true;
 		}
-		return excludeFields.contains(descriptor.getName());
+		return configuration.getExcludeFields().contains(descriptor.getName());
 	}
 	
 	protected Object constructPojo(Class<?> clazz, Map<TypeVariable<?>, Type> genericParameters, int maxDepth) {

@@ -7,6 +7,8 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.minnal.autopojo.AttributeMetaData;
 import org.minnal.autopojo.AutoPojoException;
+import org.minnal.autopojo.Configuration;
+import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.util.PropertyUtil;
 
 /**
@@ -14,7 +16,11 @@ import org.minnal.autopojo.util.PropertyUtil;
  *
  */
 public abstract class AbstractAttributeResolver implements AttributeResolver {
-
+	
+	protected GenerationStrategy strategy;
+	
+	protected Configuration configuration;
+	
 	protected void setAttribute(Object pojo, AttributeMetaData attribute, Object value) {
 		try {
 			if (value != null) {
@@ -32,4 +38,9 @@ public abstract class AbstractAttributeResolver implements AttributeResolver {
 		setAttribute(pojo, attribute, value);
 	}
 
+	@Override
+	public void init(GenerationStrategy strategy, Configuration configuration) {
+		this.strategy = strategy;
+		this.configuration = configuration;
+	}
 }

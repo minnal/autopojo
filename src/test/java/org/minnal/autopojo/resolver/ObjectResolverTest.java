@@ -9,20 +9,22 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.minnal.autopojo.Configuration;
 import org.minnal.autopojo.CustomExclude;
 import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.GenericObject;
+import org.minnal.autopojo.MultiLevelNestedObject;
 import org.minnal.autopojo.NestedObjectThroughCollection;
 import org.minnal.autopojo.ObjectWithExcludeFields;
 import org.minnal.autopojo.OneLevelNestedObject;
 import org.minnal.autopojo.SimpleObject;
-import org.minnal.autopojo.MultiLevelNestedObject;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author ganeshs
@@ -32,9 +34,13 @@ public class ObjectResolverTest {
 	
 	private ObjectResolver resolver;
 	
+	private Configuration configuration;
+	
 	@BeforeMethod
 	public void setup() {
-		resolver = new ObjectResolver(new GenerationStrategy());
+		configuration = new Configuration();
+		resolver = new ObjectResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 	}
 
 	@Test
@@ -71,9 +77,11 @@ public class ObjectResolverTest {
 	
 	@Test
 	public void shouldExcludeFieldsMarkedWithCustomExcludeAnnotation() {
-		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
+		Set<Class<? extends Annotation>> annotations = new HashSet<Class<? extends Annotation>>();
 		annotations.add(CustomExclude.class);
-		resolver = new ObjectResolver(new GenerationStrategy(), annotations, null);
+		configuration.setExcludeAnnotations(annotations);
+		resolver = new ObjectResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 		ObjectWithExcludeFields object = (ObjectWithExcludeFields) resolver.resolve(ObjectWithExcludeFields.class, 10);
 		assertNull(object.getSimpleExcludedObject());
 		assertNull(object.getCustomExcludedObject());
@@ -84,7 +92,9 @@ public class ObjectResolverTest {
 	
 	@Test
 	public void shouldExcludeFieldsFromExcludedFieldList() {
-		resolver = new ObjectResolver(new GenerationStrategy(), null, Arrays.asList("fieldToBeExcluded"));
+		configuration.setExcludeFields(Sets.newHashSet("fieldToBeExcluded"));
+		resolver = new ObjectResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 		ObjectWithExcludeFields object = (ObjectWithExcludeFields) resolver.resolve(ObjectWithExcludeFields.class, 10);
 		assertNull(object.getFieldToBeExcluded());
 	}

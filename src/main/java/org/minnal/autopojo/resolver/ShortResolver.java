@@ -13,20 +13,18 @@ import java.lang.reflect.Type;
  */
 public class ShortResolver extends NumberResolver<Short> {
 	
-	/**
-	 * @param minValue
-	 * @param maxValue
-	 */
-	public ShortResolver(short minValue, short maxValue) {
-		super(minValue, maxValue);
-	}
-
-	public ShortResolver() {
-		super((short) 0, (short) (Short.MAX_VALUE/2));
-	}
-
 	public Short resolve(Class<?> clazz, int maxDepth, Type... genericTypes) {
 		Short value = (Short) super.resolve(clazz, maxDepth, genericTypes);
-		return value != null ? value : (short) (minValue + (short) (Math.random() * (maxValue - minValue + 1)));
+		return value != null ? value : (short) (configuration.getShortMinValue() + (short) (Math.random() * (configuration.getShortMaxValue() - configuration.getShortMinValue() + 1)));
+	}
+	
+	@Override
+	protected Short getMaxValue() {
+		return configuration.getShortMaxValue();
+	}
+	
+	@Override
+	protected Short getMinValue() {
+		return configuration.getShortMinValue();
 	}
 }

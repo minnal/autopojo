@@ -14,9 +14,11 @@ import java.util.Set;
 
 import org.minnal.autopojo.AttributeMetaData;
 import org.minnal.autopojo.CollectionModel;
+import org.minnal.autopojo.Configuration;
 import org.minnal.autopojo.GenerationStrategy;
 import org.minnal.autopojo.SimpleObject;
 import org.minnal.autopojo.util.PropertyUtil;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +27,16 @@ import org.testng.annotations.Test;
  */
 public class CollectionResolverTest {
 	
-	private CollectionResolver resolver = new CollectionResolver(new GenerationStrategy());
+	private CollectionResolver resolver;
+	
+	private Configuration configuration; 
+	
+	@BeforeMethod
+	public void setup() {
+		configuration = new Configuration();
+		resolver = new CollectionResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
+	}
 
 	@Test
 	public void shouldGenerateNonGenericList() {
@@ -74,12 +85,14 @@ public class CollectionResolverTest {
 	
 	@Test
 	public void shouldGenerateSpecifiedNoOfElements() {
-		resolver = new CollectionResolver(10, new GenerationStrategy());
+		configuration.setNoOfElementsInCollection(10);
+		resolver = new CollectionResolver();
+		resolver.init(new GenerationStrategy(configuration), configuration);
 		generateAndCheckCollection("nonGenericList", List.class, Object.class, 10);
 	}
 	
 	private void generateAndCheckCollection(String propertyName, Class<?> collectionType, Class<?> elementClass) {
-		generateAndCheckCollection(propertyName, collectionType, elementClass, CollectionResolver.DEFAULT_NO_OF_ELEMENTS);
+		generateAndCheckCollection(propertyName, collectionType, elementClass, configuration.getNoOfElementsInCollection());
 	}
 	
 	private void generateAndCheckCollection(String propertyName, Class<?> collectionType, Class<?> elementClass, int count) {

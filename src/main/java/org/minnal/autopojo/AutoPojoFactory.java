@@ -15,7 +15,14 @@ public class AutoPojoFactory {
 	private GenerationStrategy strategy;
 	
 	public AutoPojoFactory() {
-		this(new GenerationStrategy());
+		this(new Configuration());
+	}
+	
+	/**
+	 * @param strategy
+	 */
+	public AutoPojoFactory(Configuration configuration) {
+		this.strategy = new GenerationStrategy(configuration);
 	}
 
 	/**
