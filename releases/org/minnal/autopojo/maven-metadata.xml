@@ -3,10 +3,10 @@
   <groupId>org.minnal</groupId>
   <artifactId>autopojo</artifactId>
   <versioning>
-    <release>0.0.1</release>
+    <release>0.0.3</release>
     <versions>
-      <version>0.0.1</version>
+      <version>0.0.3</version>
     </versions>
-    <lastUpdated>20130827030059</lastUpdated>
+    <lastUpdated>20130830124754</lastUpdated>
   </versioning>
 </metadata>
