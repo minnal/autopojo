@@ -19,10 +19,6 @@ public class Configuration {
 	
 	private Set<String> excludeFields = new HashSet<String>();
 	
-	private int maxDepth = 5;
-	
-	private int maxCompositeDepth = 1;
-	
 	private String stringPrefix = "";
 	
 	private String stringSuffix = "";
@@ -94,34 +90,6 @@ public class Configuration {
 	 */
 	public void setExcludeFields(Set<String> excludeFields) {
 		this.excludeFields.addAll(excludeFields);
-	}
-
-	/**
-	 * @return the maxDepth
-	 */
-	public int getMaxDepth() {
-		return maxDepth;
-	}
-
-	/**
-	 * @param maxDepth the maxDepth to set
-	 */
-	public void setMaxDepth(int maxDepth) {
-		this.maxDepth = maxDepth;
-	}
-
-	/**
-	 * @return the maxCompositeDepth
-	 */
-	public int getMaxCompositeDepth() {
-		return maxCompositeDepth;
-	}
-
-	/**
-	 * @param maxCompositeDepth the maxCompositeDepth to set
-	 */
-	public void setMaxCompositeDepth(int maxCompositeDepth) {
-		this.maxCompositeDepth = maxCompositeDepth;
 	}
 
 	/**

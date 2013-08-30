@@ -10,7 +10,7 @@ package org.minnal.autopojo;
  */
 public class AutoPojoFactory {
 
-	public static final int MAX_DEPTH = 5;
+	private int MAX_DEPTH = 5;
 	
 	private GenerationStrategy strategy;
 	
