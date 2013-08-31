@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.minnal</groupId>
 	<artifactId>autopojo</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<name>Auto Pojo</name>
 	<description>Automatically populate pojo</description>
 	<dependencies>
@@ -67,7 +67,7 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/minnal/autopojo.git</developerConnection>
-	  <tag>autopojo-0.0.3-SNAPSHOT</tag>
+	  <tag>autopojo-0.0.4</tag>
   </scm>
 
 	<developers>
