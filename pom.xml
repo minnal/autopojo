@@ -149,7 +149,7 @@
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryName>autopojo</repositoryName>      <!-- github repo name -->
+					<repositoryName>mvn-repo</repositoryName>      <!-- github repo name -->
 					<repositoryOwner>minnal</repositoryOwner>    <!-- github username -->
 					<merge>true</merge>
 				</configuration>
@@ -190,12 +190,12 @@
 		<repository>
 			<id>github-releases-repo</id>
 			<name>GitHub ${project.artifactId} Releases Repository</name>
-			<url>https://raw.github.com/minnal/${project.artifactId}/mvn-repo/releases</url>
+			<url>https://raw.github.com/minnal/mvn-repo/master/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>github-snapshots-repo</id>
 			<name>GitHub ${project.artifactId} Snapshots Repository</name>
-			<url>https://raw.github.com/minnal/${project.artifactId}/mvn-repo/snapshots</url>
+			<url>https://raw.github.com/minnal/mvn-repo/master/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
