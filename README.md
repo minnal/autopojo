@@ -45,7 +45,7 @@ Autopojo is available as a Maven artifact and should be fairly simpler to integr
    <repositories>
      <repository>
        <id>autopojo-repo</id>
-       <url>https://raw.github.com/minnal/autopojo/mvn-repo/releases</url>
+       <url>https://raw.github.com/minnal/mvn-repo/master/releases</url>
        <snapshots>
          <enabled>true</enabled>
          <updatePolicy>always</updatePolicy>
