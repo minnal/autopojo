@@ -6,6 +6,8 @@ package org.minnal.autopojo;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import org.minnal.autopojo.resolver.BooleanResolver;
 import org.minnal.autopojo.resolver.ByteResolver;
 import org.minnal.autopojo.resolver.CharacterResolver;
 import org.minnal.autopojo.resolver.CollectionResolver;
+import org.minnal.autopojo.resolver.DateResolver;
 import org.minnal.autopojo.resolver.DoubleResolver;
 import org.minnal.autopojo.resolver.EnumResolver;
 import org.minnal.autopojo.resolver.FloatResolver;
@@ -28,6 +31,7 @@ import org.minnal.autopojo.resolver.MapResolver;
 import org.minnal.autopojo.resolver.ObjectResolver;
 import org.minnal.autopojo.resolver.ShortResolver;
 import org.minnal.autopojo.resolver.StringResolver;
+import org.minnal.autopojo.resolver.TimestampResolver;
 
 /**
  * @author ganeshs
@@ -43,6 +47,9 @@ public class GenerationStrategy {
 		this.configuration = configuration;
 		register(String.class, StringResolver.class);
 		register(Object.class, ObjectResolver.class);
+		register(Date.class, DateResolver.class);
+		register(java.util.Date.class, DateResolver.class);
+		register(Timestamp.class, TimestampResolver.class);
 		register(Integer.class, IntegerResolver.class);
 		register(int.class, IntegerResolver.class);
 		register(Long.class, LongResolver.class);
