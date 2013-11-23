@@ -1,4 +1,4 @@
-autopojo
+autopojo [![Build Status](https://travis-ci.org/minnal/autopojo.png)](https://travis-ci.org/minnal/autopojo)
 ========
 
 Autopojo is a java library that can automatically populate the pojo objects. It provides a very simple interface and can be easily extended and customized.
