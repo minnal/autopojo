@@ -38,7 +38,7 @@ Autopojo is available as a Maven artifact and should be fairly simpler to integr
      <dependency>
        <groupId>org.minnal</groupId>
        <artifactId>autopojo</artifactId>
-       <version>0.0.2</version>
+       <version>0.0.7</version>
      </dependency>
    </dependencies>
    
