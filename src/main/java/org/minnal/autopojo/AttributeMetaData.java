@@ -88,7 +88,7 @@ public class AttributeMetaData {
 	
 	public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
 		for (Annotation annotation : annotations) {
-			if (annotation.getClass().equals(annotationClass)) {
+			if (annotation.annotationType().equals(annotationClass)) {
 				return (T) annotation;
 			}
 		}

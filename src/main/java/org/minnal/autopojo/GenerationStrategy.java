@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -39,17 +39,13 @@ import org.minnal.autopojo.resolver.TimestampResolver;
  */
 public class GenerationStrategy {
 	
-	private Map<Class<?>, AttributeResolver> resolvers = new HashMap<Class<?>, AttributeResolver>();
+	private Map<Class<?>, AttributeResolver> resolvers = new LinkedHashMap<Class<?>, AttributeResolver>();
 	
 	private Configuration configuration;
 	
 	public GenerationStrategy(Configuration configuration) {
 		this.configuration = configuration;
 		register(String.class, StringResolver.class);
-		register(Object.class, ObjectResolver.class);
-		register(Date.class, DateResolver.class);
-		register(java.util.Date.class, DateResolver.class);
-		register(Timestamp.class, TimestampResolver.class);
 		register(Integer.class, IntegerResolver.class);
 		register(int.class, IntegerResolver.class);
 		register(Long.class, LongResolver.class);
@@ -68,8 +64,9 @@ public class GenerationStrategy {
 		register(char.class, CharacterResolver.class);
 		register(BigInteger.class, BigIntegerResolver.class);
 		register(BigDecimal.class, BigDecimalResolver.class);
-		register(Collection.class, CollectionResolver.class);
-		register(Map.class, MapResolver.class);
+		register(Date.class, DateResolver.class);
+		register(java.util.Date.class, DateResolver.class);
+		register(Timestamp.class, TimestampResolver.class);
 		register(Enum.class, EnumResolver.class);
 		register(Object[].class, ArrayResolver.class);
 		register(int[].class, ArrayResolver.class);
@@ -80,6 +77,9 @@ public class GenerationStrategy {
 		register(byte[].class, ArrayResolver.class);
 		register(short[].class, ArrayResolver.class);
 		register(char[].class, ArrayResolver.class);
+		register(Collection.class, CollectionResolver.class);
+		register(Map.class, MapResolver.class);
+		register(Object.class, ObjectResolver.class);		
 	}
 	
 	/**
